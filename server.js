@@ -23,13 +23,18 @@ var messages = [{
 	var api = express.Router();
 
 
-api.get("/messages" , function(req , res) {
-	res.json(messages);
+api.get("/messages/:user?" , function(req , res) {
+	if (req.params.user) {
+		var user = req.params.user;
+		var result = messages.filter(message => message.owner == user);
+		return res.json(result);
+	}
+	return res.json(messages);
 });
 
 api.post("/messages" , function(req , res) {
 	messages.push(req.body);	
-	res.status(200).send('Done');
+	res.status(200).json(req.body);
 });
 
 app.use('/api' , api);
